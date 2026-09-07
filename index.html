@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Fool the AI · DKU AI Club</title>
+  <meta name="description" content="Draw an object and try to fool a neural network.">
+
+  <!-- 1. Our visual design -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- 2. The ml5 library exposes window.ml5. DoodleNet is loaded later by app.js. -->
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="title-group">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div class="eyebrow">LIVE NEURAL NETWORK CHALLENGE</div>
+          <h1>FOOL <span>THE AI</span></h1>
+        </div>
+      </div>
+      <img class="club-logo" src="assets/dku-ai-club-logo.png" alt="DKU AI Club">
+    </header>
+
+    <section class="challenge" aria-live="polite">
+      <div class="challenge-label">YOUR MISSION</div>
+      <div class="challenge-text">
+        Draw <span class="subject" id="subject">a cat</span> — make the AI see
+        <span class="decoy" id="decoy">a dog</span>.
+      </div>
+      <button class="button" id="skipButton" type="button">↻ New mission</button>
+    </section>
+
+    <section class="workspace">
+      <section class="panel drawing-panel">
+        <div class="canvas-wrap" id="canvasWrap">
+          <!-- The player draws on this large canvas. -->
+          <canvas id="drawingCanvas" width="700" height="560" aria-label="Drawing canvas"></canvas>
+          <div class="canvas-hint">Draw here with your mouse or finger</div>
+          <div class="scanline" aria-hidden="true"></div>
+        </div>
+
+        <div class="toolbar">
+          <button class="button" id="undoButton" type="button">↶ Undo</button>
+          <button class="button" id="clearButton" type="button">Clear</button>
+          <div class="timer" id="timer">TIME <strong id="timeValue">25.0</strong></div>
+          <button class="button submit" id="submitButton" type="button">Lock in answer</button>
+        </div>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel prediction-panel">
+          <div class="panel-heading">
+            <div class="panel-title">AI THINKS...</div>
+            <div class="model-status" id="modelStatus">
+              <i class="status-dot"></i><span>LOADING MODEL</span>
+            </div>
+          </div>
+
+          <div id="predictions">
+            <!-- app.js updates these three rows. -->
+            <div class="prediction-row">
+              <div class="prediction-label"><span>Waiting for ink</span><span class="confidence">—</span></div>
+              <div class="confidence-bar"><i></i></div>
+            </div>
+            <div class="prediction-row">
+              <div class="prediction-label"><span>—</span><span class="confidence">—</span></div>
+              <div class="confidence-bar"><i></i></div>
+            </div>
+            <div class="prediction-row">
+              <div class="prediction-label"><span>—</span><span class="confidence">—</span></div>
+              <div class="confidence-bar"><i></i></div>
+            </div>
+          </div>
+
+          <div class="explanation">
+            <b>How it works:</b>
+            <span id="howText">The sketch is cropped, centered and resized before DoodleNet classifies it.</span>
+            <div class="model-preview">
+              <!-- preprocess.js draws the normalized model input here. -->
+              <canvas id="modelCanvas" width="280" height="280"></canvas>
+              <span><strong>AI INPUT</strong>This is exactly what the model sees.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel score-panel">
+          <div class="stat"><span>SCORE</span><strong id="scoreValue">0</strong></div>
+          <div class="stat"><span>ROUND</span><strong><span id="roundValue">1</span>/<span id="roundTotal">5</span></strong></div>
+          <div class="leaderboard">
+            <div class="leaderboard-title">TODAY'S LEADERBOARD</div>
+            <div id="rankList"></div>
+          </div>
+        </section>
+
+        <!-- Visible only when CONFIG.debug is true. -->
+        <section class="panel debug-panel hidden" id="debugPanel">
+          <div class="panel-title">DEBUG CONSOLE</div>
+          <dl>
+            <div><dt>Mode</dt><dd id="debugMode">—</dd></div>
+            <div><dt>Bounding box</dt><dd id="debugBounds">—</dd></div>
+            <div><dt>Scale</dt><dd id="debugScale">—</dd></div>
+            <div><dt>Last inference</dt><dd id="debugLatency">—</dd></div>
+            <div><dt>Error</dt><dd id="debugError">None</dd></div>
+          </dl>
+        </section>
+      </aside>
+    </section>
+
+    <footer><span>Draw something humans understand—but machines misunderstand.</span><span>DKU AI Club · Club Expo</span></footer>
+  </main>
+
+  <div class="overlay" id="startOverlay">
+    <div class="modal">
+      <div class="modal-kicker">DKU AI CLUB PRESENTS</div>
+      <h2>Can you fool a neural network?</h2>
+      <p>Draw the first object, but trick the AI into seeing the second. You have <span id="secondsLabel">25</span> seconds.</p>
+      <input id="playerName" maxlength="12" placeholder="YOUR NAME OR INITIALS" autocomplete="off">
+      <button class="button submit wide" id="startButton" type="button">Start challenge →</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="resultOverlay">
+    <div class="modal">
+      <div class="result-emoji" id="resultEmoji">⚡</div>
+      <h2 id="resultTitle">You fooled it!</h2>
+      <p id="resultText"></p>
+      <div class="round-score" id="roundScore">+720</div>
+      <button class="button submit wide" id="nextButton" type="button">Next mission →</button>
+    </div>
+  </div>
+
+  <!-- Load order matters: config → preprocessing → game controller. -->
+  <script src="js/config.js"></script>
+  <script src="js/preprocess.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
