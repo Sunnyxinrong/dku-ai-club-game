@@ -296,49 +296,9 @@ assets/dku-ai-club-logo.png
 
 编辑 `css/styles.css` 顶部的颜色变量。
 
-## 8. 自己部署到 GitHub Pages
 
-这是纯静态项目，GitHub Pages 是最简单的公开部署方式之一。
 
-### 网页操作方式
-
-1. 注册并登录 GitHub；
-2. 点击右上角 `+` → **New repository**；
-3. 仓库名称填写 `dku-ai-club-game`；
-4. 选择 **Public**，然后创建仓库；
-5. 点击 **Add file → Upload files**；
-6. 上传本项目内部的所有文件和文件夹；
-7. 确认 `index.html` 位于仓库最外层，而不是又套了一层文件夹；
-8. 打开 **Settings → Pages**；
-9. 在 **Build and deployment** 中选择 **Deploy from a branch**；
-10. Branch 选择 `main`，文件夹选择 `/(root)`，然后保存；
-11. 等待部署完成，然后打开：
-
-```text
-https://你的GitHub用户名.github.io/dku-ai-club-game/
-```
-
-更新网站时，只需再次上传并提交修改后的文件。GitHub Pages 可能需要几分钟才显示最新版本。
-
-GitHub 官方教程：
-
-- https://docs.github.com/en/pages/quickstart
-- https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
-
-## 9. 部署前检查清单
-
-- `index.html` 位于网站根目录；
-- Logo 能正常显示；
-- Console 没有红色错误；
-- 状态显示 `NEURAL NET READY`；
-- AI INPUT 正确居中；
-- 鼠标和触摸屏都可以绘画；
-- Clear、Undo、New mission、Lock in answer 都能工作；
-- 完成五回合后排行榜更新；
-- 把 `debug` 改成 `false`；
-- 用手机热点测试一次，排除校园网络限制。
-
-## 10. 这个项目目前的限制
+## 这个项目目前的限制
 
 - 第一次加载依赖网络获取 ml5.js 和 DoodleNet；
 - 排行榜只保存在当前浏览器，不在不同设备之间同步；
